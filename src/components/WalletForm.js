@@ -4,22 +4,37 @@ import { connect } from 'react-redux';
 import { fetchCurrency } from '../redux/actions';
 
 class WalletForm extends Component {
+  state = {
+    valueInput: '',
+    descriptionInput: '',
+  };
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(fetchCurrency(this.state));
   }
 
+  handleChange = ({ target }) => {
+    const { value, name } = target;
+    this.setState({
+      [name]: value,
+    });
+  };
+
   render() {
     const { currencies } = this.props;
-
+    const { valueInput, descriptionInput } = this.state;
     return (
-      <div>
-        <label htmlFor="value">
+      <form>
+        <label htmlFor="valueInput">
           Valor:
           <input
             data-testid="value-input"
             type="input"
-            name="value"
+            name="valueInput"
+            value={ valueInput }
+            onChange={ this.handleChange }
+            placeholder="$ 0.00"
           />
         </label>
         <label htmlFor="currencyInput">
@@ -57,9 +72,17 @@ class WalletForm extends Component {
             data-testid="description-input"
             type="input"
             name="descriptionInput"
+            onChange={ this.handleChange }
+            value={ descriptionInput }
           />
         </label>
-      </div>
+        <button
+          type="button"
+          name="button"
+        >
+          Adicionar despesa
+        </button>
+      </form>
     );
   }
 }

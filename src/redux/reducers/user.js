@@ -3,6 +3,7 @@ import { USER } from '../actions';
 
 const INITIAL_STATE = {
   email: '',
+  totalExpense: 0,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
