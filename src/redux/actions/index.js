@@ -2,38 +2,49 @@
 export const USER = 'USER';
 export const WALLET_REQUEST = 'WALLET_REQUEST';
 export const WALLET_SUCCESS = 'WALLET_SUCCESS';
-export const SAVE_EXPENSE = 'SAVE_EXPENSE';
-
-export const userAction = (value) => ({
+export const EXPENSE_REQUEST = 'EXPENSE_REQUEST';
+export const EXPENSE_SUCCESS = 'EXPENSE_SUCCESS';
+// action creator do user email
+export const userAction = (email) => ({
   type: USER,
-  payload: { value },
+  payload: { email },
+});
+// action creator e funcao das moedas
+export const currencyRequest = () => ({
+  type: WALLET_REQUEST,
 });
 
-export const currencySuccess = (currencies) => ({
-  type: 'WALLET_SUCCESS',
-  currencies,
+export const currencySuccess = (data) => ({
+  type: WALLET_SUCCESS,
+  payload: data,
 });
 
 export function fetchCurrency() {
   return async (dispatch) => {
+    dispatch(currencyRequest);
     const response = await fetch('https://economia.awesomeapi.com.br/json/all');
     const data = await response.json();
-    console.log(data);
-    const currency = Object.keys(data);
-    const result = currency.filter((index) => index !== 'USDT');
+    delete data.USDT;
+    // const result = currency.filter((index) => index !== 'USDT'); funicona igual
+    const result = Object.keys(data);
     return dispatch(currencySuccess(result));
   };
 }
-
-export const saveExpense = (totalExpense, coin) => ({
-  type: SAVE_EXPENSE,
-  payload: [totalExpense, coin],
+// action creator e fucao do valor total de gastos
+export const expenseRequest = () => ({
+  type: EXPENSE_REQUEST,
 });
 
-export function saveCurrency() {
-  return async (dispatch) => {
-    const response = await fetch('https://economia.awesomeapi.com.br/json/all');
-    const datas = await response.json();
-    console.log(datas);
-  };
-}
+export const expenseSuccess = (data) => ({
+  type: EXPENSE_SUCCESS,
+  payload: data,
+});
+
+export const fetchCotation = async () => {
+  // return async (dispatch) => {
+  //   dispatch(expenseRequest);
+  const response = await fetch('https://economia.awesomeapi.com.br/json/all');
+  const data = await response.json();
+  delete data.USDT;
+  return data;
+};
