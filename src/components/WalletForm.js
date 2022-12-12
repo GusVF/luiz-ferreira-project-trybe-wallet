@@ -18,10 +18,8 @@ class WalletForm extends Component {
   }
 
   handleClick = async () => {
-    const { dispatch, expenses } = this.props;
+    const { dispatch, expenses, currency } = this.props;
     const { valueInput, description, method, currencies, tag } = this.state;
-    const getAPI = await fetch('https://economia.awesomeapi.com.br/json/all');
-    const data = await getAPI.json();
     const payload = {
       id: expenses.length,
       valueInput,
@@ -29,9 +27,12 @@ class WalletForm extends Component {
       method,
       currencies,
       tag,
-      exchangeRates: data,
+      exchangeRates: currency,
     };
     dispatch(expenseSuccess(payload));
+    const response = await fetch('https://economia.awesomeapi.com.br/json/all');
+    const data = await response.json();
+    console.log(data);
     this.setState({
       valueInput: '',
       description: '',
@@ -50,7 +51,7 @@ class WalletForm extends Component {
 
   render() {
     const { description, tag, valueInput, method } = this.state;
-    const { currencies } = this.props;
+    const { currency } = this.props;
     return (
       <form>
         <label htmlFor="valueInput">
@@ -71,11 +72,11 @@ class WalletForm extends Component {
             name="currency"
             data-testid="currency-input"
           >
-            {currencies.map((currency, index) => (
+            {currency.map((curr, index) => (
               <option
-                key={ `${currency}-${index}` }
+                key={ `${curr}-${index}` }
               >
-                {currency}
+                {curr}
               </option>))}
           </select>
         </label>
@@ -133,12 +134,12 @@ class WalletForm extends Component {
 
 WalletForm.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
+  currency: PropTypes.arrayOf(PropTypes.string).isRequired,
   expenses: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  currencies: state.wallet.currencies,
+  currency: state.wallet.currencies,
   expenses: state.wallet.expenses,
 });
 
