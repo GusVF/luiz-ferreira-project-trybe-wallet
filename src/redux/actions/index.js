@@ -4,6 +4,7 @@ export const WALLET_REQUEST = 'WALLET_REQUEST';
 export const WALLET_SUCCESS = 'WALLET_SUCCESS';
 export const EXPENSE_REQUEST = 'EXPENSE_REQUEST';
 export const EXPENSE_SUCCESS = 'EXPENSE_SUCCESS';
+export const DELETE_ITEM = 'DELETE_ITEM';
 // action creator do user email
 export const userAction = (email) => ({
   type: USER,
@@ -48,3 +49,8 @@ export const fetchCotation = async () => {
   delete data.USDT;
   return data;
 };
+
+export const deleteItemAction = (id) => ({
+  type: DELETE_ITEM,
+  id,
+});
