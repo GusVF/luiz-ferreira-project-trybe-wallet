@@ -5,6 +5,8 @@ export const WALLET_SUCCESS = 'WALLET_SUCCESS';
 export const EXPENSE_REQUEST = 'EXPENSE_REQUEST';
 export const EXPENSE_SUCCESS = 'EXPENSE_SUCCESS';
 export const DELETE_ITEM = 'DELETE_ITEM';
+export const EDIT_INFO = 'EDIT_INFO';
+export const SAVE_INFO = 'SAVE_INFO';
 // action creator do user email
 export const userAction = (email) => ({
   type: USER,
@@ -53,4 +55,14 @@ export const fetchCotation = async () => {
 export const deleteItemAction = (id) => ({
   type: DELETE_ITEM,
   id,
+});
+
+export const editInfo = (id) => ({
+  type: EDIT_INFO,
+  id,
+});
+
+export const saveEditInfo = (info) => ({
+  type: SAVE_INFO,
+  payload: info,
 });

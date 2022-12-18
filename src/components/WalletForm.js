@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchCurrency, expenseSuccess } from '../redux/actions';
+import { fetchCurrency, expenseSuccess, saveEditInfo } from '../redux/actions';
 
 class WalletForm extends Component {
   state = {
@@ -49,9 +49,18 @@ class WalletForm extends Component {
     });
   };
 
+  handleEditon = () => {
+    const { dispatch } = this.props;
+    dispatch(saveEditInfo(this.state));
+    this.setState({
+      value: '',
+      description: '',
+    });
+  };
+
   render() {
     const { description, tag, value, method } = this.state;
-    const { currencies } = this.props;
+    const { currencies, editor } = this.props;
     return (
       <form>
         <label htmlFor="value">
@@ -73,9 +82,9 @@ class WalletForm extends Component {
             data-testid="currency-input"
             onChange={ this.handleChange }
           >
-            {currencies.map((currency, index) => (
+            {currencies.map((currency) => (
               <option
-                key={ `${currency}-${index}` }
+                key={ currency }
               >
                 {currency}
               </option>))}
@@ -124,9 +133,9 @@ class WalletForm extends Component {
         <button
           type="button"
           name="button"
-          onClick={ this.handleClick }
+          onClick={ editor ? this.handleEditon : this.handleClick }
         >
-          Adicionar despesa
+          {editor ? 'Editar despesa' : 'Adicionar despesa'}
         </button>
       </form>
     );
@@ -137,11 +146,13 @@ WalletForm.propTypes = {
   dispatch: PropTypes.func.isRequired,
   currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
   expenses: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  editor: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   currencies: state.wallet.currencies,
   expenses: state.wallet.expenses,
+  editor: state.wallet.editor,
 });
 
 export default connect(mapStateToProps)(WalletForm);
