@@ -36,7 +36,6 @@ describe('Tests the login page', () => {
       renderWithRouterAndRedux(<App />, { initialEntries });
 
       const valueInput = screen.getByTestId('value-input');
-      const currencyInput = screen.getByTestId('currency-input');
       const methodInput = screen.getByTestId('method-input');
       const tagInput = screen.getByTestId('tag-input');
       const addButton = screen.getByRole('button', { name: /adicionar despesa/i });
@@ -44,7 +43,6 @@ describe('Tests the login page', () => {
       const emailBREl = screen.getByText(/brl/i);
 
       expect(valueInput).toBeInTheDocument();
-      expect(currencyInput).toBeInTheDocument();
       expect(methodInput).toBeInTheDocument();
       expect(tagInput).toBeInTheDocument();
       expect(addButton).toBeInTheDocument();
@@ -92,7 +90,7 @@ const firstMock = {
 };
 
 describe('Editing items on the expense list', () => {
-  test('if edit feature works as expected', async () => {
+  test('if edit feature works as expected', () => {
     const initialEntries = ['/carteira'];
     const initialState = {
       wallet: {
@@ -108,19 +106,25 @@ describe('Editing items on the expense list', () => {
     const editBtn = screen.getByRole('button', { name: /Editar/i });
 
     const valueInput = screen.getByTestId('value-input');
-    const currencyInput = screen.getByTestId('currency-input');
     const payMethod = screen.getByTestId('method-input');
     const tagInput = screen.getByTestId('tag-input');
     const descriptionInput = screen.getByTestId('description-input');
+    const cellValue = screen.getByRole('cell', { name: /47.53/i });
+    const cellExchange = screen.getByRole('cell', { name: /4.75/i });
+    const cellCurrName = screen.getByRole('cell', { name: 'Real Brasileiro' });
+
+    expect(cellValue).toBeInTheDocument();
+    expect(cellExchange).toBeInTheDocument();
+    expect(cellCurrName).toBeInTheDocument();
 
     expect(editBtn).toBeInTheDocument();
     expect(addEditBtn).toBeInTheDocument();
 
     userEvent.type(valueInput, '10');
     expect(valueInput.value).toEqual('10');
-
-    userEvent.click(currencyInput, 'USD');
-    expect(currencyInput.value).toBe('USD');
+    userEvent.click(addEditBtn);
+    userEvent.clear(valueInput);
+    expect(valueInput.value).toBe('');
 
     userEvent.click(payMethod, 'Dinheiro');
     expect(payMethod.value).toBe('Dinheiro');
@@ -130,6 +134,9 @@ describe('Editing items on the expense list', () => {
 
     userEvent.type(descriptionInput, 'Lanche');
     expect(descriptionInput.value).toBe('Lanche');
+    userEvent.click(addEditBtn);
+    userEvent.clear(descriptionInput);
+    expect(descriptionInput.value).toBe('');
 
     userEvent.click(editBtn);
     expect(addEditBtn.textContent).toBe('Editar despesa');
@@ -143,7 +150,7 @@ describe('Editing items on the expense list', () => {
 });
 
 describe('Deleting items in the expense list', () => {
-  test('if items are deleted on with button', async () => {
+  test('if items are deleted on with button', () => {
     const initialEntries = ['/carteira'];
     const initialState = {
       wallet: {
@@ -164,5 +171,34 @@ describe('Deleting items in the expense list', () => {
     expect(totalField.textContent).toBe('47.53');
     userEvent.click(deleteBtn);
     expect(totalField.textContent).toBe('0.00');
+  });
+});
+
+describe('Test items with API info', () => {
+  test('if edit feature works as expected', async () => {
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(mockData),
+    });
+    const initialEntries = ['/carteira'];
+    const initialState = {
+      wallet: {
+        currencies: Object.keys(mockData),
+        expenses: [firstMock],
+        editor: false,
+        idToEdit: 0,
+      },
+    };
+    renderWithRouterAndRedux(<App />, { initialEntries, initialState });
+
+    const currencyInput = await screen.findByTestId('currency-input');
+    const optionCurrency = await screen.findByRole('option', { name: 'CAD' });
+
+    expect(currencyInput).toBeInTheDocument();
+    userEvent.selectOptions(currencyInput, optionCurrency);
+    expect(currencyInput.value).toBe('CAD');
+
+    expect(global.fetch).toHaveBeenCalledWith('https://economia.awesomeapi.com.br/json/all');
+    expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 });
