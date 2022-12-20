@@ -8,6 +8,7 @@ import Table from '../components/Table';
 import mockData from './helpers/mockData';
 
 const SIX = 6;
+const INPUT_TEST_ID = 'value-input';
 
 describe('Tests the login page', () => {
   test('if login element page renders on screen', () => {
@@ -35,7 +36,7 @@ describe('Tests the login page', () => {
 
       renderWithRouterAndRedux(<App />, { initialEntries });
 
-      const valueInput = screen.getByTestId('value-input');
+      const valueInput = screen.getByTestId(INPUT_TEST_ID);
       const methodInput = screen.getByTestId('method-input');
       const tagInput = screen.getByTestId('tag-input');
       const addButton = screen.getByRole('button', { name: /adicionar despesa/i });
@@ -89,8 +90,18 @@ const firstMock = {
   exchangeRates: mockData,
 };
 
+const secondMock = {
+  id: 1,
+  value: '20',
+  currency: 'CAD',
+  method: 'Cartão de crédito',
+  tag: 'Traballho',
+  description: 'Viajem',
+  exchangeRates: mockData,
+};
+
 describe('Editing items on the expense list', () => {
-  test('if edit feature works as expected', () => {
+  test('if edit feature works as expected', async () => {
     const initialEntries = ['/carteira'];
     const initialState = {
       wallet: {
@@ -105,24 +116,32 @@ describe('Editing items on the expense list', () => {
     const addEditBtn = screen.getByRole('button', { name: /Adicionar despesa/i });
     const editBtn = screen.getByRole('button', { name: /Editar/i });
 
-    const valueInput = screen.getByTestId('value-input');
+    const valueInput = screen.getByTestId(INPUT_TEST_ID);
     const payMethod = screen.getByTestId('method-input');
     const tagInput = screen.getByTestId('tag-input');
     const descriptionInput = screen.getByTestId('description-input');
     const cellValue = screen.getByRole('cell', { name: /47.53/i });
     const cellExchange = screen.getByRole('cell', { name: /4.75/i });
     const cellCurrName = screen.getByRole('cell', { name: 'Real Brasileiro' });
+    const cellDescrip = screen.getByRole('cell', { name: 'passeio' });
+    const currencyInput = screen.getByTestId('currency-input');
 
     expect(cellValue).toBeInTheDocument();
     expect(cellExchange).toBeInTheDocument();
     expect(cellCurrName).toBeInTheDocument();
-
+    expect(cellDescrip).toBeInTheDocument();
     expect(editBtn).toBeInTheDocument();
     expect(addEditBtn).toBeInTheDocument();
+    expect(currencyInput).toBeInTheDocument();
 
     userEvent.type(valueInput, '10');
     expect(valueInput.value).toEqual('10');
     userEvent.click(addEditBtn);
+    userEvent.clear(valueInput);
+    expect(valueInput.value).toBe('');
+    userEvent.click(editBtn);
+    userEvent.type(valueInput, '20');
+    expect(valueInput.value).toEqual('20');
     userEvent.clear(valueInput);
     expect(valueInput.value).toBe('');
 
@@ -140,12 +159,13 @@ describe('Editing items on the expense list', () => {
 
     userEvent.click(editBtn);
     expect(addEditBtn.textContent).toBe('Editar despesa');
-
-    userEvent.clear(valueInput);
-    expect(valueInput.value).toBe('');
-
+    userEvent.type(descriptionInput, 'Viajem');
     userEvent.clear(descriptionInput);
     expect(descriptionInput.value).toBe('');
+
+    userEvent.click(currencyInput, 'USD');
+    expect(currencyInput.value).toBe('USD');
+    expect(currencyInput.value).not.toBe('USDT');
   });
 });
 
@@ -176,6 +196,7 @@ describe('Deleting items in the expense list', () => {
 
 describe('Test items with API info', () => {
   test('if edit feature works as expected', async () => {
+    const THREE = 3;
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue(mockData),
@@ -184,7 +205,7 @@ describe('Test items with API info', () => {
     const initialState = {
       wallet: {
         currencies: Object.keys(mockData),
-        expenses: [firstMock],
+        expenses: [secondMock],
         editor: false,
         idToEdit: 0,
       },
@@ -193,12 +214,25 @@ describe('Test items with API info', () => {
 
     const currencyInput = await screen.findByTestId('currency-input');
     const optionCurrency = await screen.findByRole('option', { name: 'CAD' });
+    const deleteBtn = screen.getByRole('button', { name: /Excluir/i });
+    const addEditBtn = screen.getByRole('button', { name: /Adicionar despesa/i });
+    const totalField = screen.getByTestId('total-field');
+    const valueInput = screen.getByTestId(INPUT_TEST_ID);
 
     expect(currencyInput).toBeInTheDocument();
     userEvent.selectOptions(currencyInput, optionCurrency);
     expect(currencyInput.value).toBe('CAD');
-
     expect(global.fetch).toHaveBeenCalledWith('https://economia.awesomeapi.com.br/json/all');
     expect(global.fetch).toHaveBeenCalledTimes(1);
+
+    userEvent.type(valueInput, '20');
+    userEvent.click(addEditBtn);
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(totalField.textContent).toBe('75.12');
+    userEvent.clear(valueInput);
+    userEvent.click(deleteBtn);
+    expect(valueInput.value).toBe('');
+    userEvent.click(addEditBtn);
+    expect(global.fetch).toHaveBeenCalledTimes(THREE);
   });
 });

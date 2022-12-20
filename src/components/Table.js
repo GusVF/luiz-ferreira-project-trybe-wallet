@@ -49,7 +49,7 @@ class Table extends Component {
                 <td>
                   <button
                     type="button"
-                    id={ id }
+                    // id={ id }
                     data-testid="delete-btn"
                     onClick={ () => this.handleClick(id) }
                   >
@@ -57,7 +57,7 @@ class Table extends Component {
                   </button>
                   <button
                     type="button"
-                    id={ id }
+                    // id={ id }
                     data-testid="edit-btn"
                     onClick={ (event) => this.handleEdition(event) }
                   >
