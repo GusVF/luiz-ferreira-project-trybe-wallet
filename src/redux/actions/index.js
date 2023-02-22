@@ -44,8 +44,6 @@ export const expenseSuccess = (data) => ({
 });
 
 export const fetchCotation = async () => {
-  // return async (dispatch) => {
-  //   dispatch(expenseRequest);
   const response = await fetch('https://economia.awesomeapi.com.br/json/all');
   const data = await response.json();
   delete data.USDT;

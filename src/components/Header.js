@@ -9,12 +9,19 @@ class Header extends Component {
         * +curr.exchangeRates[curr.currency].ask), 0);
     return (
       <div>
-        <header>
+        <header
+          className="
+          ml-3
+          has-text-white-bis
+          is-size-5
+          has-text-weight-bold
+          pt-5"
+        >
           <div data-testid="email-field">{`Email: ${email}`}</div>
           <span data-testid="total-field">
-            {total.toFixed(2)}
+            {`Total: ${total.toFixed(2)}`}
           </span>
-          <span data-testid="header-currency-field">BRL</span>
+          <span data-testid="header-currency-field" className="ml-4">BRL</span>
         </header>
       </div>
     );

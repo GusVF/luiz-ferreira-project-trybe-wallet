@@ -1,7 +1,6 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-// import { combineReducers } from 'redux';
 import App from '../App';
 import renderWithRouterAndRedux from './renderFunc';
 import Table from '../components/Table';

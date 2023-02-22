@@ -18,7 +18,13 @@ class Table extends Component {
   render() {
     const { expenses } = this.props;
     return (
-      <table>
+      <table
+        className="
+      table is-fullwidth
+      table is-hoverable
+      is-italic
+      has-text-weight-medium"
+      >
         <thead>
           <tr>
             <th> Descrição </th>
@@ -46,18 +52,18 @@ class Table extends Component {
                 <td>{ parseFloat(exchangeRates[currency].ask).toFixed(2)}</td>
                 <td>{ (value * exchangeRates[currency].ask).toFixed(2) }</td>
                 <td>Real Brasileiro</td>
-                <td>
+                <td className="is-flex">
                   <button
+                    className="button is-danger is-small"
                     type="button"
-                    // id={ id }
                     data-testid="delete-btn"
                     onClick={ () => this.handleClick(id) }
                   >
                     Excluir
                   </button>
                   <button
+                    className="button is-info is-small"
                     type="button"
-                    // id={ id }
                     data-testid="edit-btn"
                     onClick={ (event) => this.handleEdition(event) }
                   >

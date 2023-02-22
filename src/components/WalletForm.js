@@ -62,10 +62,20 @@ class WalletForm extends Component {
     const { description, tag, value, method } = this.state;
     const { currencies, editor } = this.props;
     return (
-      <form>
+      <form
+        className="
+      is-flex
+      is-justify-content-space-around
+      is-align-items-flex-end
+      has-text-white
+      has-text-weight-bold
+      is-size-5
+      py-6"
+      >
         <label htmlFor="value">
           Valor:
           <input
+            className="input value"
             data-testid="value-input"
             type="input"
             name="value"
@@ -77,6 +87,7 @@ class WalletForm extends Component {
         <label htmlFor="currency">
           Moeda
           <select
+            className="select px-4 is-size-6"
             type="select"
             name="currency"
             data-testid="currency-input"
@@ -93,6 +104,7 @@ class WalletForm extends Component {
         <label htmlFor="method">
           Modo de pagamento
           <select
+            className="select is-size-6"
             type="select"
             name="method"
             data-testid="method-input"
@@ -107,6 +119,7 @@ class WalletForm extends Component {
         <label htmlFor="tag">
           Categoria
           <select
+            className="select px-5 is-size-6"
             type="select"
             name="tag"
             value={ tag }
@@ -123,6 +136,7 @@ class WalletForm extends Component {
         <label htmlFor="description">
           Descrição
           <input
+            className="input value"
             data-testid="description-input"
             type="input"
             name="description"
@@ -131,6 +145,7 @@ class WalletForm extends Component {
           />
         </label>
         <button
+          className="button is-success"
           type="button"
           name="button"
           onClick={ editor ? this.handleEditon : this.handleClick }

@@ -1,41 +1,43 @@
-.App {
-  text-align: center;
+body {
+  background-image: url('https://img.freepik.com/premium-vector/money-transfer-global-currency-stock-exchange-stock-vector-illustration_115579-1655.jpg?w=2000');
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  height: 100%;
+  width: 100%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+.value {
+  max-width: 150px;
+} 
 
-@media ( prefers-reduced-motion : no-preference ) {
-
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
+.emailDiv {
   align-items: center;
-  background-color: #282c34;
-  color: white;
+  border: 3px solid rgb(237, 203, 203);
+  border-radius: 7px;
+  box-shadow: 9px 8px 8px 10px rgb(27, 38, 38);
   display: flex;
   flex-direction: column;
-  font-size: calc(10px + 2vmin);
-  justify-content: center;
-  min-height: 100vh;
+  height: 300px;
+  justify-content: space-around;
+  margin-left: 35%;
+  margin-top: 10%;
+  width: 400px;
 }
 
-.App-link {
-  color: #61dafb;
+label {
+  margin-right: 25px;
 }
 
-@keyframes App-logo-spin {
+select {
+  border-radius: 5px;
+}
 
-  from {
-    transform: rotate(0deg);
-  }
+table {
+  border-radius: 5px;
+  width:max-content;
+}
 
-  to {
-    transform: rotate(360deg);
-  }
+.tableBtn {
+  margin-left: 5px;
 }
